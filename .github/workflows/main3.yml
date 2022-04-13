@@ -1,0 +1,81 @@
+Skip to content
+Search or jump to…
+Pull requests
+Issues
+Marketplace
+Explore
+ 
+@kamleshmjain 
+kamleshmjain
+/
+flask-new-app
+Public
+Code
+Issues
+Pull requests
+Actions
+Projects
+Wiki
+Security
+Insights
+Settings
+flask-new-app/.github/workflows/main2.yml
+@kamleshmjain
+kamleshmjain Update main2.yml
+Latest commit 61bbc11 5 minutes ago
+ History
+ 1 contributor
+52 lines (43 sloc)  1.57 KB
+   
+name: Changelog
+
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+  
+  #pull_request:
+  #  types: [closed]
+
+  release:
+    types: [published]
+
+  issues:
+    types: [closed, edited]
+
+jobs:
+  generate_changelog:
+    runs-on: ubuntu-latest
+    name: Generate changelog for master branch
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Generate changelog
+        uses: charmixer/auto-changelog-action@v1
+        with:
+          token: ${{ secrets.YOUR_GITHUB_TOKEN }}
+
+      - name: Commit files
+        env:
+          CI_USER: ${{ secrets.YOUR_GITHUB_USER }}
+          CI_EMAIL: ${{ secrets.YOUR_GITHUB_EMAIL }}
+        run: |
+          #git config --local user.email "$CI_EMAIL"
+          git config --local user.email "kamleshmjain1@gmail.com"
+          #git config --local user.name "$CI_USER"
+          git config --local user.name "kamleshmjain"
+          git add CHANGELOG.md && git commit -m 'Updated CHANGELOG.md' && echo "push=true" >> $GITHUB_ENV || echo "No changes to CHANGELOG.md"
+      - name: Push changes
+        if: env.push == 'true'
+        env:
+          CI_USER: ${{ secrets.YOUR_GITHUB_USER }}
+          CI_TOKEN: ${{ secrets.YOUR_GITHUB_TOKEN }}
+        run: |
+          #git push "https://$CI_USER:$CI_TOKEN@github.com/$GITHUB_REPOSITORY.git" HEAD:master
+          git push "https://kamleshmjain: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@github.com/flask-new-app.git" HEAD:main
+Loading complete
